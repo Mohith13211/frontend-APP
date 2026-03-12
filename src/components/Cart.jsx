@@ -1,8 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../App";
+import { useNavigate } from "react-router-dom";
 function Cart() {
-  const { cart, setCart } = useContext(AppContext);
+  const { cart, setCart, orders, setOrders } = useContext(AppContext);
   const [orderValue, setOrderValue] = useState(0);
+  const navigate = useNavigate();
   const increment = (id) => {
     setCart(
       cart.map((item) => {
@@ -33,6 +35,13 @@ function Cart() {
       }, 0),
     );
   }, [cart]);
+  const placeOrder = () => {
+    if (cart.length > 0) {
+      setOrders([...orders, ...cart]);
+      setCart([]);
+      navigate("/orders");
+    }
+  };
 
   return (
     <div>
@@ -52,7 +61,7 @@ function Cart() {
         <strong>Order Value:{orderValue}</strong>
       </p>
       <p>
-        <button>Place Order</button>
+        <button onClick={placeOrder}>Place Order</button>
       </p>
     </div>
   );
